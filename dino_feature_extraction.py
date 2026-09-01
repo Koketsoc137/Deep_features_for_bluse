@@ -2,7 +2,7 @@
 """
 DINO feature extraction script for BLUSE radio spectral dataset.
 
-Loads DINOv2 ViT-S/14 model (smallest), extracts features from H5 spectral data,
+Loads DINOv3 ViT-G/14 model (largest), extracts features from H5 spectral data,
 and saves features with IDs as a parquet file.
 
 Usage:
@@ -11,6 +11,8 @@ Usage:
 Default:
     h5_file: C:/Users/koket/Desktop/BLUSE/data/mk_sample_hits.h5
     output_dir: C:/Users/koket/Desktop/BLUSE/features/
+
+Requires DINOv3 weights file. Set DINOV3_WEIGHTS path below.
 """
 
 import sys
@@ -33,12 +35,13 @@ if backbone_dir.exists():
 from BLUSE_dataset import ImageDataset
 
 
-def load_model(device='cuda'):
-    """Load DINOv2 ViT-S/14 model (smallest)."""
-    print('Loading DINOv2 ViT-S/14...')
-    model = torch.hub.load('facebookresearch/dinov2', 'dinov2_vits14')
+def load_model(device='cuda', weights_path=None):
+    """Load DINOv3 ViT-G/14 model."""
+    print('Loading DINOv3 ViT-G/14...')
+    weights_path = Path('/path/to/dinov3_vitg14_weights.pth')  # Edit this path
+    model = torch.hub.load(str(weights_path.parent), 'dinov3_vitg14', source='local', weights=str(weights_path))
     model = model.to(device).eval()
-    print('Model loaded.')
+    print(f'Model loaded from: {weights_path}')
     return model
 
 
