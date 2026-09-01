@@ -1,0 +1,51 @@
+{
+  "feature_type": "penultimate",
+  "feature_dim": 512,
+  "source_layer": "layer4 -> global average pool (pre-fc)",
+  "stage_shapes": {
+    "layer1": [
+      64,
+      15,
+      30
+    ],
+    "layer2": [
+      128,
+      8,
+      15
+    ],
+    "layer3": [
+      256,
+      4,
+      8
+    ],
+    "layer4": [
+      512,
+      2,
+      4
+    ]
+  },
+  "input_shape": [
+    57,
+    120
+  ],
+  "output_shape": [
+    15119,
+    512
+  ],
+  "normalisation": {
+    "per_tile": "median/MAD",
+    "mad_eps": 1e-06,
+    "clip": 10.0,
+    "imagenet_mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "imagenet_std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "note": "One descriptor per tile; all spatial information is pooled away. Row i corresponds to row i of patch_features.npy and to row i of the hits table."
+}
