@@ -129,15 +129,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('h5_file', nargs='?',
-                        default='C:/Users/koket/Desktop/BLUSE/data/mk_sample_hits.h5',
+                        default=str((base_dir / 'data' / 'mk_sample_hits.h5').resolve()),
                         help='Path to H5 file')
     parser.add_argument('-o', '--output-dir', 
-                        default='C:/Users/koket/Desktop/BLUSE/features/',
+                        default=str((base_dir / 'features').resolve()),
                         help='Output directory for parquet file')
     args = parser.parse_args()
     
     # Setup
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print(f'H5 file: {args.h5_file}')
+    print(f'Output dir: {args.output_dir}')
     print(f'Device: {device}\n')
     
     # Pipeline
