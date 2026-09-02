@@ -2,7 +2,7 @@
 """
 DINO feature extraction script for BLUSE radio spectral dataset.
 
-Loads DINOv3 ViT-G/14 model (largest), extracts features from H5 spectral data,
+Loads DINOv3 ViT-H/16+ model, extracts features from H5 spectral data,
 and saves features with IDs as a parquet file.
 
 Usage:
@@ -11,8 +11,6 @@ Usage:
 Default:
     h5_file: C:/Users/koket/Desktop/BLUSE/data/mk_sample_hits.h5
     output_dir: C:/Users/koket/Desktop/BLUSE/features/
-
-Requires DINOv3 weights file. Set DINOV3_WEIGHTS path below.
 """
 
 import sys
@@ -36,10 +34,17 @@ from BLUSE_dataset import ImageDataset
 
 
 def load_model(device='cuda', weights_path=None):
-    """Load DINOv3 ViT-G/14 model."""
-    print('Loading DINOv3 ViT-G/14...')
-    weights_path = Path('/path/to/dinov3_vitg14_weights.pth')  # Edit this path
-    model = torch.hub.load(str(weights_path.parent), 'dinov3_vitg14', source='local', weights=str(weights_path))
+    """Load DINOv3 ViT-H/16+ model."""
+    print('Loading DINOv3 ViT-H/16+...')
+    
+    dinov3_dir = base_dir / 'dinov3'
+    sys.path.insert(0, str(dinov3_dir))
+    
+    weights_path = base_dir / 'dinov3_vith16plus_pretrain_lvd1689m-7c1da9a5.pth'
+    
+    model = torch.hub.load(str(dinov3_dir), 'dinov3_vith16plus', pretrained=False, source='local')
+    state_dict = torch.load(weights_path, map_location=device, weights_only=False)
+    model.load_state_dict(state_dict)
     model = model.to(device).eval()
     print(f'Model loaded from: {weights_path}')
     return model
